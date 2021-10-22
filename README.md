@@ -5,31 +5,31 @@ Terraform Modules
 
 <p>Calling a module<p>
 
-  module "iam" {
-    source = "./modules/mod-iam"
-    # role   = [{}] # Create only a role
-    # policy = [{}] # Create only a policy
-    iam    = [
-      ### Lambda Role/Policy ###
-      {
-        name    = "Lambda"
-        role_policy = file("policy/lambda-role.json")
-        policy  = jsonencode({
-          Version = "2012-10-17",
-          Statement = [
-            {
-              Effect = "Allow",
-              Action = [
-                "ses:SendEmail",
-                "ses:SendRawEmail"
-              ],
-              Resource = "arn:aws:ses:${local.region}:${local.account_number}:identity/${local.domainName}"
-            }
-          ]
-        })
-      },
-    ]
-  }
+    module "iam" {
+      source = "./modules/mod-iam"
+      # role   = [{}] # Create only a role
+      # policy = [{}] # Create only a policy
+      iam    = [
+        ### Lambda Role/Policy ###
+        {
+          name    = "Lambda"
+          role_policy = file("policy/lambda-role.json")
+          policy  = jsonencode({
+            Version = "2012-10-17",
+            Statement = [
+              {
+                Effect = "Allow",
+                Action = [
+                  "ses:SendEmail",
+                  "ses:SendRawEmail"
+                ],
+                Resource = "arn:aws:ses:${local.region}:${local.account_number}:identity/${local.domainName}"
+              }
+            ]
+          })
+        },
+      ]
+    }
 
 <h3>When you call a module check the var.tf inside the module for what variables need to be called inside the terrafrom module.<h3>
 
