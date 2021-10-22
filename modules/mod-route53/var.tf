@@ -1,6 +1,6 @@
 variable "domain" {
   type        = string
-  description = "description"
+  description = "All the variables you will passing in to create Route53 Records"
 }
 
 variable "record" {

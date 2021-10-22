@@ -1,9 +1,9 @@
 variable "api" {
   type        = list(map(any))
-  description = "description"
+  description = "All the variables you will passing in to create the REST API Gateway"
 }
 
 variable "api_list" {
   type        = list(map(any))
-  description = "description"
+  description = "How you want the api to interpret the data"
 }

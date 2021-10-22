@@ -1,15 +1,15 @@
 locals {
   dvo    = "${flatten(aws_acm_certificate.cert.domain_validation_options)}"
-  domain = var.domains
+  domain = var.domain
 }
 
 data "aws_route53_zone" "zone" {
-  name         = var.domains
+  name         = var.domain
   private_zone = false
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name               = var.domains
+  domain_name               = var.domain
   subject_alternative_names = var.san
   validation_method         = "DNS"
   

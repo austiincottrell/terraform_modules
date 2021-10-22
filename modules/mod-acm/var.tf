@@ -1,11 +1,13 @@
-variable "domains" {
-  type    = string
-  default = ""
+variable "domain" {
+  type        = string
+  default     = ""
+  description = "The public domain name of the Route53 website name you registered"
 }
 
 variable "san" {
-  type    = list
-  default = []
+  type        = list
+  default     = []
+  description = "The subject alternative names of the Route53 website name you registered"
 }
 
 variable my_tags {
