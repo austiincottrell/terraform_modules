@@ -1,9 +1,9 @@
 # terraform_modules
 Terraform Modules 
 
-<h2>Built on Terraform v1.0.3 <h2>
+<h2>Built on Terraform v1.0.3 </h2>
 
-<p>Calling a module<p>
+<p>Calling a module
 
     module "iam" {
       source = "./modules/mod-iam"
@@ -31,6 +31,6 @@ Terraform Modules
       ]
     }
 
-<h3>When you call a module check the var.tf inside the module for what variables need to be called inside the terrafrom module.<h3>
+When you call a module check the var.tf inside the module for what variables need to be called inside the terrafrom module.
 
-<h3>If sections of terraform is commented out please note that this was done for my implementation and to allow others to use it the way they want to implement the terraform.<h3>
+If sections of terraform is commented out please note that this was done for my implementation and to allow others to use it the way they want to implement the terraform.</p>
