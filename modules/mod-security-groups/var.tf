@@ -1,11 +1,16 @@
-variable "security_group" {
+variable "cidr_sg_name" {
   type        = list(string)
-  description = "what will be called in the main.tf"
+  description = "Naming the security group"
+}
+
+variable "cidr_sg" {
+  type        = list(map(any))
+  description = "Cidr sg that will be created"
 }
 
 variable "sg" {
   type        = list(map(any))
-  description = "call the ingress and egress values"
+  description = "Security group sg that will be created"
 }
 
 variable "vpc_id" {

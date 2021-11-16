@@ -5,3 +5,11 @@ output "key_arn" {
 output "key_id" {
   value = aws_kms_key.key.*.key_id
 }
+
+output "cloudwatch_key_arn" {
+  value = aws_kms_key.cloud.*.arn
+}
+
+output "cloudwatch_key_id" {
+  value = aws_kms_key.cloud.*.key_id
+}

@@ -6,7 +6,7 @@ resource "aws_network_acl" "secure_private_subnet" {
     for_each = var.private_acl
     content {
       from_port  = ingress.value["port"]
-      to_port    = ingress.value["port"]
+      to_port    = ingress.value["port2"]
       protocol   = ingress.value["type"]
       action     = "allow"
       cidr_block = ingress.value["cidr"]

@@ -8,7 +8,7 @@ resource "aws_dynamodb_table" "db" {
 
   attribute {
     name = lookup(var.dynamodb[count.index], "hash_key", "LockID")
-    type = lookup(var.dynamodb[count.index], "hash_key", "S")
+    type = lookup(var.dynamodb[count.index], "hash_type", "S")
   }
 
   # dynamic "attribute" {
