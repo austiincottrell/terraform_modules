@@ -1,6 +1,11 @@
 variable "cidr_sg_name" {
   type        = list(string)
-  description = "Naming the security group"
+  description = "Naming the cdir sg group"
+}
+
+variable "sg_name" {
+  type        = list(string)
+  description = "Naming the security sg group"
 }
 
 variable "cidr_sg" {

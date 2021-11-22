@@ -1,4 +1,4 @@
-resource "aws_api_gateway_rest_api" "api" {
+  resource "aws_api_gateway_rest_api" "api" {
   count = length(var.api)
 
   name           = lookup(var.api[count.index], "name")
@@ -39,6 +39,8 @@ resource "aws_api_gateway_method_response" "api" {
   resource_id = aws_api_gateway_resource.api[count.index].id
   http_method = aws_api_gateway_method.api[count.index].http_method
   status_code = "200"
+
+  response_parameters = { "method.response.header.Access-Control-Allow-Origin" = true }
 }
 
 resource "aws_api_gateway_integration" "api" {
@@ -50,6 +52,7 @@ resource "aws_api_gateway_integration" "api" {
   integration_http_method = lookup(var.api[count.index], "integration_http_method")
   type                    = lookup(var.api[count.index], "type")
   uri                     = lookup(var.api[count.index], "uri")
+  content_handling        = "CONVERT_TO_TEXT"
 }
 
 resource "aws_api_gateway_integration_response" "api" {
@@ -62,13 +65,7 @@ resource "aws_api_gateway_integration_response" "api" {
 
   # Transforms the backend JSON response to XML
   response_templates = {
-    "application/xml" = <<EOF
-#set($inputRoot = $input.path('$'))
-<?xml version="1.0" encoding="UTF-8"?>
-<message>
-    $inputRoot.body
-</message>
-EOF
+    "application/json" = ""
   }
 }
 

@@ -1,4 +1,4 @@
-resource "aws_security_group" "my_cidr_sg" {
+resource "aws_security_group" "cidr_sg" {
   count       = length(var.cidr_sg)
   vpc_id      = var.vpc_id
   dynamic "ingress" {
@@ -28,7 +28,7 @@ resource "aws_security_group" "my_cidr_sg" {
   }
 }
 
-resource "aws_security_group" "my_sg_sg" {
+resource "aws_security_group" "my_sg" {
   count       = length(var.sg)
   vpc_id      = var.vpc_id
   dynamic "ingress" {
@@ -37,7 +37,7 @@ resource "aws_security_group" "my_sg_sg" {
           from_port       = ingress.value["from_port"]
           to_port         = ingress.value["to_port"]
           protocol        = ingress.value["protocol"]
-          security_groups = ingress.value["sg"]
+          security_groups = ingress.value["self"] == true ? null : ingress.value["sg"]
           self            = ingress.value["self"] == "" ? null : true
         }
     }
@@ -48,7 +48,7 @@ resource "aws_security_group" "my_sg_sg" {
           from_port       = egress.value["from_port"]
           to_port         = egress.value["to_port"]
           protocol        = egress.value["protocol"]
-          security_groups = egress.value["sg"]
+          security_groups = egress.value["self"] == true ? null : egress.value["sg"]
           self            = egress.value["self"] == "" ? null : true
         }
     }

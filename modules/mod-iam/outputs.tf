@@ -1,3 +1,8 @@
+output "iam_role_name" {
+  value       = aws_iam_role.role.*.name
+  description = "role name"
+}
+
 output "iam_role_id" {
   value       = aws_iam_role.role.*.id
   description = "role id"
@@ -32,12 +37,12 @@ output "iam_policy_arn" {
 
 ### Policy ###
 
-# output "policy_arn" {
-#   value       = aws_iam_policy.just_policy.*.arn
-#   description = "policy arn"
-# }
+output "policy_arn" {
+  value       = aws_iam_policy.just_policy.*.arn
+  description = "policy arn"
+}
 
-# output "policy_id" {
-#   value       = aws_iam_policy.just_policy.*.id
-#   description = "policy id"
-# }
+output "policy_name" {
+  value       = aws_iam_policy.just_policy.*.name
+  description = "policy name"
+}

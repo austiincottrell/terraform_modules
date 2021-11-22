@@ -8,7 +8,7 @@ variable "iam" {
 #   description = "side variable that will call in our iam variables from child module"
 # }
 
-# variable "policy" {
-#   type        = list(map(any))
-#   description = "side variable that will call in our iam variables from child module"
-# }
+variable "policy" {
+  type        = list(map(any))
+  description = "side variable that will call in our iam variables from child module"
+}

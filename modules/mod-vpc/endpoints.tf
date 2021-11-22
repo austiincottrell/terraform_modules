@@ -1,6 +1,11 @@
 resource aws_vpc_endpoint "myend" {
   count              = length(var.endpoint)
   vpc_id             = aws_vpc.vpc.id
+  subnet_ids         = [
+    aws_subnet.subnet[2].id, aws_subnet.subnet[3].id,
+    aws_subnet.subnet[4].id, aws_subnet.subnet[5].id,
+    aws_subnet.subnet[6].id,
+  ]
 
   vpc_endpoint_type  = lookup(var.endpoint[count.index], "type")
   service_name       = lookup(var.endpoint[count.index], "service_name")
@@ -30,8 +35,8 @@ resource "aws_security_group" "myend"{
   ingress {
     from_port       = lookup(var.endpoint[count.index], "from_port")
     to_port         = lookup(var.endpoint[count.index], "to_port")
-    protocol        = "tcp"
-    cidr_blocks     = [var.cidr_block]
+    protocol        = lookup(var.endpoint[count.index], "protocol")
+    cidr_blocks     = [lookup(var.endpoint[count.index], "cidr")]
   }
 
   egress {
@@ -42,6 +47,6 @@ resource "aws_security_group" "myend"{
   }
 
   tags = {
-      Name = "my-endpoint-sg"
+      Name = lookup(var.endpoint[count.index], "name")
   }
 }
