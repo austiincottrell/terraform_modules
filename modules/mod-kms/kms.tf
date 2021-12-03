@@ -41,7 +41,7 @@ resource "aws_kms_key" "cloud" {
             "Resource": "*",
             "Condition": {
                 "ArnEquals": {
-                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:${lookup(var.kms_cloudwatch_alias[count.index], "aws_region")}:${lookup(var.kms_cloudwatch_alias[count.index], "account_number")}:log-group:${lookup(var.kms_cloudwatch_alias[count.index], "log_group")}"
+                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:${lookup(var.kms_cloudwatch_alias[count.index], "aws_region")}:${lookup(var.kms_cloudwatch_alias[count.index], "account_number")}:log-group:*"
                 }
             }
         }    

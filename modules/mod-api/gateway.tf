@@ -13,6 +13,15 @@
   }
 }
 
+resource "aws_api_gateway_model" "api" {
+  count        = length(var.api)
+  rest_api_id  = aws_api_gateway_rest_api.api[count.index].id
+  name         = lookup(var.api[count.index], "model_name")
+  content_type = lookup(var.api[count.index], "content_type", "application/json")
+
+  schema = lookup(var.api[count.index], "model_schema")
+}
+
 resource "aws_api_gateway_resource" "api" {
   count = length(var.api)
 
@@ -21,26 +30,33 @@ resource "aws_api_gateway_resource" "api" {
   path_part   = lookup(var.api[count.index], "path_part")
 }
 
-resource "aws_api_gateway_method" "api" {
-  count = length(var.api)
-
-  rest_api_id   = aws_api_gateway_rest_api.api[count.index].id
-  resource_id   = aws_api_gateway_resource.api[count.index].id
-  http_method   = lookup(var.api[count.index], "http_method")
-  authorization = lookup(var.api[count.index], "authorization", null)
-
-  request_models = {lookup(var.api[count.index], "models", "application/json") = "Empty"}
+resource "aws_api_gateway_request_validator" "api" {
+  count                       = length(var.api)
+  name                        = lookup(var.api[count.index], "name")
+  rest_api_id                 = aws_api_gateway_rest_api.api[count.index].id
+  validate_request_body       = true
+  validate_request_parameters = true
 }
 
-resource "aws_api_gateway_method_response" "api" {
+resource "aws_api_gateway_method" "api" {
   count = length(var.api)
+  depends_on    = [aws_api_gateway_model.api]
 
-  rest_api_id = aws_api_gateway_rest_api.api[count.index].id
-  resource_id = aws_api_gateway_resource.api[count.index].id
-  http_method = aws_api_gateway_method.api[count.index].http_method
-  status_code = "200"
+  rest_api_id          = aws_api_gateway_rest_api.api[count.index].id
+  resource_id          = aws_api_gateway_resource.api[count.index].id
+  http_method          = lookup(var.api[count.index], "http_method")
+  authorization        = lookup(var.api[count.index], "authorization", null)
+  api_key_required     = lookup(var.api[count.index], "api_key", null)
+  request_validator_id = aws_api_gateway_request_validator.api[count.index].id
 
-  response_parameters = { "method.response.header.Access-Control-Allow-Origin" = true }
+  request_parameters = {
+    "method.request.header.Content-type" = false,
+    "method.request.header.X-Api-Key"    = false
+  }
+
+  request_models = {
+      lookup(var.api[count.index], "content_type", "application/json") = lookup(var.api[count.index], "model_name")
+    }
 }
 
 resource "aws_api_gateway_integration" "api" {
@@ -52,7 +68,10 @@ resource "aws_api_gateway_integration" "api" {
   integration_http_method = lookup(var.api[count.index], "integration_http_method")
   type                    = lookup(var.api[count.index], "type")
   uri                     = lookup(var.api[count.index], "uri")
-  content_handling        = "CONVERT_TO_TEXT"
+  passthrough_behavior    = lookup(var.api[count.index], "passthrough_behavior")
+  request_templates       = {
+    lookup(var.api[count.index], "content_type", "application/json") = lookup(var.api[count.index], "mapping_template")
+  }
 }
 
 resource "aws_api_gateway_integration_response" "api" {
@@ -63,10 +82,24 @@ resource "aws_api_gateway_integration_response" "api" {
   http_method = aws_api_gateway_method.api[count.index].http_method
   status_code = aws_api_gateway_method_response.api[count.index].status_code
 
-  # Transforms the backend JSON response to XML
-  response_templates = {
-    "application/json" = ""
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
+
+  response_templates = {
+    lookup(var.api[count.index], "content_type") = ""
+  }
+}
+
+resource "aws_api_gateway_method_response" "api" {
+  count = length(var.api)
+
+  rest_api_id = aws_api_gateway_rest_api.api[count.index].id
+  resource_id = aws_api_gateway_resource.api[count.index].id
+  http_method = aws_api_gateway_method.api[count.index].http_method
+  status_code = "200"
+
+  response_parameters = { "method.response.header.Access-Control-Allow-Origin" = false }
 }
 
 resource "aws_api_gateway_deployment" "api" {

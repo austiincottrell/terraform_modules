@@ -3,6 +3,15 @@ resource "aws_sfn_state_machine" "step" {
   name       = lookup(var.step[count.index], "name")
   role_arn   = lookup(var.step[count.index], "iam_role")
   definition = lookup(var.step[count.index], "definition")
+
+  dynamic "logging_configuration" {
+    for_each = var.logging[count.index]
+    content {
+      include_execution_data = logging_configuration.value["include_execution_data"]
+      level = logging_configuration.value["level"]
+      log_destination = logging_configuration.value["log_destination"]
+    }
+  }
 }
 
 ##################################
@@ -10,7 +19,7 @@ resource "aws_sfn_state_machine" "step" {
 ##################################
 
 resource "aws_sfn_state_machine" "event" {
-  count      = length(var.event_step) > 1 ? length(var.event_step) : 0
+  count      = length(var.event_step) > 0 ? length(var.event_step) : 0
   name       = lookup(var.event_step[count.index], "name")
   role_arn   = lookup(var.event_step[count.index], "iam_role")
   definition = lookup(var.event_step[count.index], "definition")

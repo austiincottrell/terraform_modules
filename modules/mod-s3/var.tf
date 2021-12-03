@@ -19,11 +19,6 @@ variable "lifecycle_rule" {
   default = [{}]
 }
 
-variable "website_lifecycle_rule" {
-  type    = list(map(any))
-  default = [{}]
-}
-
 variable "logging_lifecycle_rule" {
   type    = list(map(any))
   default = [{}]

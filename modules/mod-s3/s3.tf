@@ -73,20 +73,6 @@ resource "aws_s3_bucket" "website_s3" {
     enabled  = lookup(var.website[count.index], "versioning", false)
   }
 
-  lifecycle_rule {
-    id       = lookup(var.website_lifecycle_rule[count.index], "id", null)
-    enabled  = lookup(var.website_lifecycle_rule[count.index], "enabled", false)
-    prefix   = lookup(var.website_lifecycle_rule[count.index], "prefix", null)
-
-    expiration {
-      days = lookup(var.website_lifecycle_rule[count.index], "deletion", null)
-    }
-
-    noncurrent_version_expiration {
-      days = lookup(var.website_lifecycle_rule[count.index], "deletion_version", null)
-    }
-  }
-
   website {
     index_document = lookup(var.website[count.index], "home_page", "index.html")
     error_document = lookup(var.website[count.index], "error_page", "error.html")

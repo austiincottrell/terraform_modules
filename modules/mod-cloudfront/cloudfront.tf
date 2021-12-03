@@ -6,7 +6,7 @@ resource "aws_cloudfront_distribution" "cloud" {
     origin_id   = lookup(var.cloudfront[count.index], "origin_id", "myS3Origin")
 
     s3_origin_config {
-      origin_access_identity = var.origin_access_identity
+      origin_access_identity = lookup(var.cloudfront[count.index], "oai")
     }
   }
 
@@ -99,7 +99,7 @@ resource "aws_cloudfront_distribution" "cloud" {
 
   viewer_certificate {
     acm_certificate_arn      = lookup(var.cloudfront[count.index], "cert")
-    minimum_protocol_version = "TLSv1.2_2019"
+    minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = lookup(var.cloudfront[count.index], "ssl_suppport", "sni-only")
   }
 }

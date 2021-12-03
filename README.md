@@ -33,3 +33,13 @@ Built on Terraform v1.0.3</h2>
 When you call a module check the var.tf inside the module for what variables need to be called inside the terrafrom module.
 
 If sections of terraform is commented out please note that this was done for my implementation and to allow others to use it the way they want to implement the terraform.</p>
+
+When calling a module that has resources you may not use change the count value from 
+
+  length(var.event_step) > 0 ? length(var.event_step) : 0
+
+to
+
+  length(var.event_step) > 1 ? length(var.event_step) : 0
+
+This will allow you to skip calling the unwanted resource in your code. Once you do want to use this resource simple revert back to 0.
