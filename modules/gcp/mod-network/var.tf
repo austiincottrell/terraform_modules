@@ -15,3 +15,11 @@ variable "subnets" {
 variable "secondary_ranges" {
   description = "dynamic secondary_ranges for subnets"
 }
+
+variable "firewall_rules" {
+  description = "dynamic creation of firewall rules"
+}
+
+variable "routes" {
+  description = "dynamic creation of network routes"
+}

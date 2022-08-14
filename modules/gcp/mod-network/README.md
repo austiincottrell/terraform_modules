@@ -15,6 +15,8 @@ locals {
 
 module "vpc" {
   source      = "./terraform_modules/modules/gcp/mod-vpc"
+
+  ### VPC Network ###
   network     = [
     {
       name          = local.network_names[0]
@@ -23,6 +25,8 @@ module "vpc" {
       public_access = false      # false will make the network private w/o 0.0.0.0 route 
     }
   ]
+
+  ### Subnets ###
   subnets     = [
     {
         network_name          = local.network_names[0]
@@ -64,4 +68,52 @@ module "vpc" {
 
     subnet-02 = []
   }
+
+  ### Firewall Rules ###
+  firewall_rules = [
+    {
+      network_name            = local.network_names[0]
+      project_id              = local.project_ids[0]
+      name                    = "allow-ssh-ingress"
+      description             = null
+      direction               = "INGRESS"
+      priority                = null
+      ranges                  = ["0.0.0.0/0"]
+      source_tags             = null
+      source_service_accounts = null
+      target_tags             = null
+      target_service_accounts = null
+      allow = [{
+        protocol = "tcp"
+        ports    = ["22"]
+      }]
+      deny = []
+      log_config = {
+        metadata = "INCLUDE_ALL_METADATA"
+      }
+    }
+  ]
+
+  ### Routes ###
+  routes = [
+    {
+        network_name           = local.network_names[0]
+        project_id             = local.project_ids[0]
+        name                   = "egress-internet"
+        description            = "route through IGW to access internet"
+        destination_range      = "0.0.0.0/0"
+        tags                   = "egress-inet"
+        next_hop_internet      = "true"
+    },
+    #  {
+    #      network_name           = local.network_names[0]
+    #      project_id             = local.project_ids[0]
+    #      name                   = "app-proxy"
+    #      description            = "route through proxy to reach app"
+    #      destination_range      = "10.50.10.0/24"
+    #      tags                   = "app-proxy"
+    #      next_hop_instance      = "app-proxy-instance"
+    #      next_hop_instance_zone = "us-west1-a"
+    #  },
+  ]
 }
