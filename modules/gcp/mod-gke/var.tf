@@ -3,24 +3,20 @@
 # These parameters must be supplied when consuming this module.
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "network" {
-  description = "dynamic network creation"
+variable "project_id" {
+  description = "project id"
 }
 
-variable "subnets" {
-  description = "dynamic subnets creation"
+variable "gke" {
+  description = "dynamic gke cluster creation"
 }
 
-variable "secondary_ranges" {
-  description = "dynamic secondary_ranges for subnets"
+variable "gke_sa" {
+  description = "dynamic gke service account creation"
 }
 
-variable "firewall_rules" {
-  description = "dynamic creation of firewall rules"
-}
-
-variable "routes" {
-  description = "dynamic creation of network routes"
+variable "gke_sa_roles" {
+  description = "dynamic gke cluster service account roles permissions"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -31,6 +27,10 @@ variable "routes" {
 variable "description" {
   type        = string
   default     = "Managed by Terraform"
-  description = "Description about the VPC"
 }
 
+variable "secrets_encryption_kms_key" {
+  description = "The Cloud KMS key to use for the encryption of secrets in etcd, e.g: projects/my-project/locations/global/keyRings/my-ring/cryptoKeys/my-key"
+  type        = string
+  default     = null
+}
