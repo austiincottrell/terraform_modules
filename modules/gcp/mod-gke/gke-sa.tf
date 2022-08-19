@@ -1,23 +1,14 @@
 resource "google_service_account" "service_account" {
-  count        = length(var.gke_sa)
+  for_each     = { for y in var.gke_sa : y.name => y }
   project      = var.project_id
-  account_id   = lookup(var.gke_sa[count.index], "sa_name")
+  account_id   = each.value.sa_name
   display_name = var.description
 }
 
-locals {
-  all_service_account_roles = concat(var.gke_sa_roles, [
-    "roles/logging.logWriter",
-    "roles/monitoring.metricWriter",
-    "roles/monitoring.viewer",
-    "roles/stackdriver.resourceMetadata.writer"
-  ])
-}
-
 resource "google_project_iam_member" "service_account-roles" {
-  for_each = toset(local.all_service_account_roles)
+  for_each = { for y in var.gke_sa : y.name => y }
 
-  project = var.project_id
-  role    = each.value
-  member  = "serviceAccount:${google_service_account.service_account.email}"
+  project  = var.project_id
+  role     = each.value.role
+  member   = "serviceAccount:${google_service_account.service_account[each.value.sa_name].email}"
 }

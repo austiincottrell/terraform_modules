@@ -3,7 +3,7 @@ locals {
     identity_namespace = "${var.project_id}.svc.id.goog" }] : [{ identity_namespace = var.identity_namespace
   }]
 
-  gke = { for x in var.gke : x.name => r }
+  gke = { for x in var.gke : x.name => x }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -53,8 +53,8 @@ resource "google_container_cluster" "cluster" {
   # ip_allocation_policy.use_ip_aliases defaults to true, since we define the block `ip_allocation_policy`
   ip_allocation_policy {
     // Choose the range, but let GCP pick the IPs within the range
-    cluster_secondary_range_name  = var.cluster_secondary_range_name
-    services_secondary_range_name = var.services_secondary_range_name
+    cluster_secondary_range_name  = each.value.cluster_secondary_range_name
+    services_secondary_range_name = each.value.services_secondary_range_name
   }
 
   # We can optionally control access to the cluster

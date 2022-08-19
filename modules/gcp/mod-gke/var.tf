@@ -15,10 +15,6 @@ variable "gke_sa" {
   description = "dynamic gke service account creation"
 }
 
-variable "gke_sa_roles" {
-  description = "dynamic gke cluster service account roles permissions"
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # Generally, these values won't need to be changed.

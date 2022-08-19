@@ -1,48 +1,8 @@
 # ---------------------------------------------------------------------------------------------------------------------
-# REQUIRED PARAMETERS
-# These parameters must be supplied when consuming this module.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "project" {
-  description = "The project ID to host the cluster in"
-  type        = string
-}
-
-variable "location" {
-  description = "The location (region or zone) to host the cluster in"
-  type        = string
-}
-
-variable "name" {
-  description = "The name of the cluster"
-  type        = string
-}
-
-variable "network" {
-  description = "A reference (self link) to the VPC network to host the cluster in"
-  type        = string
-}
-
-variable "subnetwork" {
-  description = "A reference (self link) to the subnetwork to host the cluster in"
-  type        = string
-}
-
-variable "cluster_secondary_range_name" {
-  description = "The name of the secondary range within the subnetwork for the cluster to use"
-  type        = string
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # Generally, these values won't need to be changed.
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "description" {
-  description = "The description of the cluster"
-  type        = string
-  default     = ""
-}
 
 variable "kubernetes_version" {
   description = "The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region."
@@ -193,12 +153,6 @@ variable "enable_client_certificate_authentication" {
 # See https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control#google-groups-for-gke
 variable "gsuite_domain_name" {
   description = "The domain name for use with Google security groups in Kubernetes RBAC. If a value is provided, the cluster will be initialized with security group `gke-security-groups@[yourdomain.com]`."
-  type        = string
-  default     = null
-}
-
-variable "secrets_encryption_kms_key" {
-  description = "The Cloud KMS key to use for the encryption of secrets in etcd, e.g: projects/my-project/locations/global/keyRings/my-ring/cryptoKeys/my-key"
   type        = string
   default     = null
 }
